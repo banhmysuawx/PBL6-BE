@@ -1,21 +1,21 @@
-from django.db import models
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your models here.
 # Create your models here.
 from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, PermissionsMixin)
-
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.db import models
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserManager(BaseUserManager):
-
     def create_user(self, username, email, password=None):
         if username is None:
-            raise TypeError('Users should have a username')
+            raise TypeError("Users should have a username")
         if email is None:
-            raise TypeError('Users should have a Email')
+            raise TypeError("Users should have a Email")
 
         user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, username, email, password=None):
         if password is None:
-            raise TypeError('Password should not be none')
+            raise TypeError("Password should not be none")
 
         user = self.create_user(username, email, password)
         user.is_superuser = True
@@ -32,43 +32,51 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+
 class ROLE_CHOICES(models.TextChoices):
-    ADMIN = 'admin'
-    SEEKER = 'seeker'
-    EMPLOYER = 'employer'
-    
+    ADMIN = "admin"
+    SEEKER = "seeker"
+    EMPLOYER = "employer"
+
 
 class GENDER_CHOICES(models.TextChoices):
-    MALE = 'male'
-    FEMALE = 'female'
-    OTHER = 'other'
-    
-AUTH_PROVIDERS = {'facebook': 'facebook', 'google': 'google',
-                'twitter': 'twitter', 'email': 'email'}
+    MALE = "male"
+    FEMALE = "female"
+    OTHER = "other"
+
+
+AUTH_PROVIDERS = {
+    "facebook": "facebook",
+    "google": "google",
+    "twitter": "twitter",
+    "email": "email",
+}
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES.choices, default=ROLE_CHOICES.SEEKER)
+
+    role = models.CharField(
+        max_length=10, choices=ROLE_CHOICES.choices, default=ROLE_CHOICES.SEEKER
+    )
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES.choices)
     date_of_birth = models.DateField(null=True, blank=True)
-    
+
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login_date = models.DateTimeField(null=True, blank=True)
-    
+
     auth_provider = models.CharField(
-        max_length=255, blank=False,
-        null=False, default=AUTH_PROVIDERS.get('email'))
-    
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+        max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get("email")
+    )
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     objects = UserManager()
 
@@ -77,7 +85,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }
+        return {"refresh": str(refresh), "access": str(refresh.access_token)}
