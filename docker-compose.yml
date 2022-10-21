@@ -18,7 +18,7 @@ services:
     ports:
       - "${DJANGO_PORT}:${DJANGO_PORT}"
     env_file:
-      - ./.env-server
+      - ./.env
     volumes:
       - ./joblink:/joblink
     command: bash -c "cd joblink &&
