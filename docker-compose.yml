@@ -1,0 +1,36 @@
+version: "3"
+services:
+  postgres:
+    image: postgres
+    expose:
+      - 5432
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    env_file:
+      - ./.env-server
+    restart: always
+  django:
+    build:
+      context: ./
+      dockerfile: Dockerfile-django
+    ports:
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
+    env_file:
+      - ./.env-server
+    volumes:
+      - ./joblink:/joblink
+    command: bash -c "cd joblink &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
+    tty: true
+    restart: always
+    depends_on:
+      - postgres
+
+networks:
+  default:
+    external: true
+    name: pbl6-network
