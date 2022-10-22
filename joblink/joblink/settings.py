@@ -14,10 +14,12 @@ import datetime
 import os
 from pathlib import Path
 
+from utils import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-from utils import config
+
 
 config.load()
 
@@ -194,3 +196,17 @@ EMAIL_PORT = os.getenv("EMAIL_SERVER_PORT")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.quangdinh.me",
+    "http://quangdinh.me",
+    "https://quangdinh.me",
+    "https://pbl.quangdinh.me",
+    "http://api.quangdinh.me",
+    "http://pbl.quangdinh.me",
+]
