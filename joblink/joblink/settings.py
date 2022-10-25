@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # "django-rest-passwordreset",
     # my app
     "accounts",
+    "companies"
 ]
 
 MIDDLEWARE = [
