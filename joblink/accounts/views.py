@@ -4,6 +4,7 @@ import jwt
 from accounts.models import User
 from accounts.renderers import UserRenderer
 from accounts.serializers import (
+    ChangePasswordSerializer,
     EmailVerificationSerializer,
     LoginSerializer,
     LogoutSerializer,
@@ -11,10 +12,10 @@ from accounts.serializers import (
     SetNewPasswordSerializer,
     UserCreateSerializer,
     UserSerializer,
-    ChangePasswordSerializer,
 )
 from rest_framework import generics, permissions, views
 from rest_framework.exceptions import *
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from utils import email_helper
@@ -29,7 +30,6 @@ from django.utils.encoding import (
     smart_bytes,
     smart_str,
 )
-from rest_framework.permissions import IsAuthenticated  
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 # Create your views here.
@@ -45,6 +45,7 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request):
         user = request.data
+        print(user.get("username"))
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -54,7 +55,7 @@ class RegisterView(generics.GenericAPIView):
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
         relativeLink = reverse("email-verify")
-        absurl = "http://" + current_site + relativeLink + "?token=" + str(token)
+        absurl = "https://" + current_site + relativeLink + "?token=" + str(token)
         email_body = (
             "Hi "
             + user.username
@@ -125,7 +126,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             relativeLink = reverse(
                 "password-reset-confirm", kwargs={"uidb64": uidb64, "token": token}
             )
-            absurl = "http://" + current_site + relativeLink
+            absurl = "https://" + current_site + relativeLink
             email_body = "Hello, \n Use link below to reset your password  \n" + absurl
             data = {
                 "email_body": email_body,
@@ -182,12 +183,13 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
             {"success": True, "message": "Password reset success"},
             status=status.HTTP_200_OK,
         )
-        
+
 
 class ChangePasswordView(generics.UpdateAPIView):
     """
     An endpoint for changing password.
     """
+
     serializer_class = ChangePasswordSerializer
     model = User
     permission_classes = (IsAuthenticated,)
@@ -203,20 +205,24 @@ class ChangePasswordView(generics.UpdateAPIView):
         if serializer.is_valid():
             # Check old password
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"old_password": ["Wrong password."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             # set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': []
+                "status": "success",
+                "code": status.HTTP_200_OK,
+                "message": "Password updated successfully",
+                "data": [],
             }
 
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LogoutAPIView(generics.GenericAPIView):
     serializer_class = LogoutSerializer

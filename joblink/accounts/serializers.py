@@ -31,6 +31,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         email = validated_data["email"]
+        username = email.split("@")[0]
         password = validated_data["password"]
         password2 = validated_data["password2"]
         date_of_birth = validated_data["date_of_birth"]
@@ -42,7 +43,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
             )
         if password != password2:
             raise serializers.ValidationError({"password": "The two passwords differ."})
-        user = User(email=email, gender=gender, role=role)
+        user = User(
+            email=email,
+            gender=gender,
+            role=role,
+            date_of_birth=date_of_birth,
+            username=username,
+        )
         user.set_password(password)
         user.save()
         return user
@@ -118,7 +125,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
             return user
         except Exception as e:
             raise AuthenticationFailed("The reset link is invalid", 401)
-        return super().validate(attrs)
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
@@ -128,6 +135,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
