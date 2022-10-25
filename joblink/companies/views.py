@@ -39,10 +39,10 @@ class CompanyDetail(APIView):
         company = self.get_object(id)
         serializer = CompanySerializer(company)
         return Response(serializer.data)
-    # def put(self,request, id , format=None):
-    #     company = self.get_object(id)
-    #     serializer = CompanySerializer(company, data = request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request, id , format=None):
+        company = self.get_object(id)
+        serializer = CompanySerializer(company, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
