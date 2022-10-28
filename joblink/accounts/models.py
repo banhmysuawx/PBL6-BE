@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-
 # Create your models here.
 # Create your models here.
 from django.contrib.auth.models import (
@@ -8,7 +7,6 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
-
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None):
