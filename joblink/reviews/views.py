@@ -1,13 +1,16 @@
+from socket import ALG_OP_DECRYPT
 from django.shortcuts import render
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from .models import Review
 from .serializers import ReviewsSerializer
-from rest_framework.permissions import AllowAny , IsAuthenticated
+from rest_framework.permissions import AllowAny , IsAuthenticated , IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 # API GET REVIEW
 class ReviewsListAPI(APIView):
+    permission_classes = (AllowAny)
     def get(self , request , format =None):
         review = Review.objects.all()
         serializer = ReviewsSerializer(review , many = True)
@@ -15,7 +18,7 @@ class ReviewsListAPI(APIView):
 
 # API CREATE REVIEW
 class ReviewsCreateAPI(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     def post(self, request, format=None):
         serializer = ReviewsSerializer(data = request.data)
         if serializer.is_valid():
@@ -38,7 +41,7 @@ class ReviewsDetailAPI(APIView):
 
 # API PUT COMPANY
 class ReviewsUpdateAPI(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     def put(self,request, id , format=None):
         review = self.get_object(id)
         serializer = ReviewsSerializer(review, data = request.data)
@@ -49,7 +52,7 @@ class ReviewsUpdateAPI(APIView):
         
 # API DELETE COMPANY
 class ReviewsDeleteAPI(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     def delete(self, request, id, format=None):
         review = self.get_object(id)
         review.delete()
