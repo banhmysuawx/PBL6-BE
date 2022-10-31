@@ -46,6 +46,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("accounts.urls")),
     path("companies/" , include('companies.urls')),
-    path("jobs/" , include('job.urls')),
-    
+    path("reviews/" , include('reviews.urls')),
+    path("jobs/" , include('job.urls'))
 ]
