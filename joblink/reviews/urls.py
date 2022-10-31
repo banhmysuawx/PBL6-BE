@@ -1,11 +1,8 @@
 from django.urls import path
 
-from reviews.views import ReviewsListAPI,ReviewsDetailAPI,ReviewsCreateAPI,ReviewsUpdateAPI,ReviewsDeleteAPI
+from reviews.views import ReviewListView,ReviewDetailView
 
 urlpatterns = [
-    path('reviews', ReviewsListAPI.as_view()),
-    path('reviews/create', ReviewsCreateAPI.as_view()),
-    path('reviews/<int:id>', ReviewsDetailAPI.as_view()),
-    path('reviews/edit/<int:id>', ReviewsUpdateAPI.as_view()),
-    path('reviews/update/<int:id>', ReviewsDeleteAPI.as_view())
+    path('reviews', ReviewListView.as_view()),
+    path('reviews/<int:pk>', ReviewDetailView.as_view()),
 ]
