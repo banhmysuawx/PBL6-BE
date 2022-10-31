@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     # my app
     "accounts",
     "companies",
-    "reviews"
+    "reviews",
+    "job"
     # "rates"
 ]
 
