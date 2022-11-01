@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     "accounts",
     "companies",
     "reviews",
+    "comment_posts",
     "job"
+    # "comments"
     # "rates"
 ]
 
