@@ -55,9 +55,9 @@ INSTALLED_APPS = [
     "companies",
     "reviews",
     "comment_posts",
-    "job"
-    # "comments"
-    # "rates"
+    "job",
+    "like_comments",
+    "dislike_comments"
 ]
 
 MIDDLEWARE = [
