@@ -48,5 +48,7 @@ urlpatterns = [
     path("companies/" , include('companies.urls')),
     path("reviews/" , include('reviews.urls')),
     path("jobs/" , include('job.urls')),
-    path("comment_posts/" , include('comment_posts.urls'))
+    path("comment_posts/" , include('comment_posts.urls')),
+    path("like_comments/" , include('like_comments.urls')),
+    path("dislike_comments/" , include('dislike_comments.urls'))
 ]
