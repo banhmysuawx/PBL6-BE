@@ -50,5 +50,6 @@ urlpatterns = [
     path("jobs/" , include('job.urls')),
     path("comment_posts/" , include('comment_posts.urls')),
     path("like_comments/" , include('like_comments.urls')),
-    path("dislike_comments/" , include('dislike_comments.urls'))
+    path("dislike_comments/" , include('dislike_comments.urls')),
+    path("applications/" , include('applications.urls'))
 ]

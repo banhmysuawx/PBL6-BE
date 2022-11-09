@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     "comment_posts",
     "job",
     "like_comments",
-    "dislike_comments"
+    "dislike_comments",
+    "applications"
 ]
 
 MIDDLEWARE = [
