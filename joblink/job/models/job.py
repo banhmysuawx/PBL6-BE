@@ -16,6 +16,12 @@ class Job(models.Model):
     is_company_name_hidden = models.BooleanField(default=True)
     skills = models.ManyToManyField(JobSkill, related_name="jobs")
     company = models.ForeignKey(Company, on_delete= models.CASCADE, related_name="jobs",null=True)
+    limited_day_do_test = models.IntegerField(default=0,null=True, blank=True)
+    limited_day_confirm_schedule = models.IntegerField(default=0,null=True, blank=True)
+    expected_result_test = models.FloatField(default=0,null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         db_table = "jobs"
