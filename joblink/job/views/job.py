@@ -7,6 +7,7 @@ from rest_framework.response import Response
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter(is_active=True)
 
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
