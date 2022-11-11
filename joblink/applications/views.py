@@ -24,7 +24,6 @@ class ApplyJobApiView(CreateAPIView):
     # permission_classes = [
     #     IsAuthenticatedOrReadOnly,
     # ]
-
     def post(self, request, *args, **kwargs):
         request.data["job"] = kwargs["job_id"]
         if request.user.is_authenticated:
@@ -36,16 +35,15 @@ class ApplyJobApiView(CreateAPIView):
         # Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # queryset = Application.objects.all()
-
 
 class AppliedJobsAPIView(ListAPIView):
     serializer_class = AppliedJobSerializer
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def get_queryset(self):
         user = self.request.user
-        print("user", user)
-        applied_jobs_id = list(Application.objects.filter(user=user.id))
+        applied_jobs_id = list(Application.objects.filter(user_id=user.id).values_list("job_id", flat=True))
+        # applied_jobs_id = Application.objects.all().filter(user_id = user.id)
+        # applied_jobs_id = Application.objects.all().filter(job__user_id=user.id)
         # print("list",applied_jobs_id)
         return Job.objects.filter(id__in=applied_jobs_id)

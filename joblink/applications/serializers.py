@@ -80,5 +80,4 @@ class AppliedJobSerializer(serializers.ModelSerializer):
 
     def _applicant(self, obj):
         user = self.context.get("request", None).user
-        # job = self.context.get("request", None).job
         return ApplicantSerializer(Application.objects.get(user=user, job=obj)).data
