@@ -4,8 +4,8 @@ from job.serializers.job import JobSerializer
 
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.all()
+    queryset = Job.objects.filter(is_active=True)
 
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.all()
+    queryset = Job.objects.filter(is_active=True)

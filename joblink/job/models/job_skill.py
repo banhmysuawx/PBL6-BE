@@ -7,6 +7,9 @@ class JobSkill(models.Model):
     description = models.TextField()
     company = models.ForeignKey(Company, on_delete = models.CASCADE, related_name ="job_skills",null=True )
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = "job_skills"
 
