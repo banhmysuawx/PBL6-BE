@@ -19,3 +19,20 @@ class CompanyDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
+
+class TopCompanyListView(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    def get(self, request, format=None):
+        top_company_list = []
+        for company in Company.objects.all():
+            if int(company.average_rating['rating__avg']) > 4:
+                top_company_list.append(company)
+        serializer = CompanySerializer(top_company_list, many = True)
+        return Response(serializer.data)
+
+class CountCompanyView(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    def get(self, request , format =None):
+        sum_company = Company.objects.all().count()
+        print(sum_company)
+        return Response({'count': sum_company})
