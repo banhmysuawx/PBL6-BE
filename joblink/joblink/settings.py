@@ -11,6 +11,8 @@ import datetime
 import os
 from pathlib import Path
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from utils import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -100,7 +102,6 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
-    
 }
 
 SIMPLE_JWT = {
@@ -216,3 +217,12 @@ CSRF_TRUSTED_ORIGINS = [
     "http://api.quangdinh.me",
     "http://pbl.quangdinh.me",
 ]
+
+sentry_sdk.init(
+    dsn="https://d71aeed1c3894509b0d855783970a18c@o4504158092722176.ingest.sentry.io/4504158093836288",
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
