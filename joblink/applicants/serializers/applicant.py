@@ -4,8 +4,6 @@ from job.serializers.job import JobSerializer
 from accounts.serializers import UserSerializer
 
 class ApplicantSerializer(serializers.ModelSerializer):
-    job = JobSerializer()
-    candidate = UserSerializer()
 
     class Meta:
         model = Applicant
