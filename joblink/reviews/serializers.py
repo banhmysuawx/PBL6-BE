@@ -18,10 +18,15 @@ class UserReviewSerializer(serializers.ModelSerializer):
 
 class ReviewsSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='user.username', read_only=True)
-    user = UserReviewSerializer(many = False)
-    company = CompanyReviewSerializer(many = False)
+    user = UserReviewSerializer()
+    company = CompanyReviewSerializer()
     def get_author(self, object):
         return object.author.username
     class Meta:
         model = Review
         fields = ['id','rating','comment','company','user','created_at','author']
+
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
