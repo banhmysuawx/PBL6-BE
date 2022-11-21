@@ -29,6 +29,9 @@ class JobCategoryDetailView(generics.GenericAPIView, mixins.RetrieveModelMixin, 
     def put(self, request, *args, **kwargs):
         return self.update(request,*args, **kwargs )
 
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request,*args, **kwargs )
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request,*args, **kwargs )
 
@@ -38,11 +41,20 @@ class CategoryJobInCompany(viewsets.ViewSet):
     queryset = JobCategory.objects.all()
 
     @action(methods=['GET'],detail=False)
-    def get_category_by_company(self, request, *args, **kwargs):
+    def get_category_and_job(self, request, *args, **kwargs):
         id_company = self.request.query_params.get("company_id", None)
         if id_company != None :
             data = JobCategoryService.getJob(id_company)
             data = getJobCategorySerializer(data,many=True).data
+            return Response(data=data,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['GET'],detail=False)
+    def get_category(self, request, *args, **kwargs):
+        id_company = self.request.query_params.get("company_id", None)
+        if id_company != None :
+            data = JobCategoryService.getCategoryInCompany(id_company)
+            data = JobCategorySerializer(data,many=True).data
             return Response(data=data,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

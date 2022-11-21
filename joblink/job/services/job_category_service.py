@@ -14,3 +14,11 @@ class JobCategoryService():
             data.append(data_item)
         return data
         
+    @classmethod
+    def getCategoryInCompany(cls,id_company):
+        try:
+            list_category = JobCategory.objects.filter(company_id=id_company)
+            return list_category
+        except:
+            return None
+    
