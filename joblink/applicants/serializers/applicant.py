@@ -4,7 +4,7 @@ from job.serializers.job import JobSerializer
 from accounts.serializers import UserSerializer
 
 class ApplicantSerializer(serializers.ModelSerializer):
-
+   
     class Meta:
         model = Applicant
         fields = "__all__"

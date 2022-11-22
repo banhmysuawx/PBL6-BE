@@ -4,7 +4,7 @@ from companies.models import Company
 
 class JobCategory(models.Model):
     name = models.CharField(max_length=100)
-    company = models.ForeignKey(Company, on_delete = models.CASCADE, related_name="job_categories",null=True)
+    company = models.ForeignKey(Company, on_delete = models.CASCADE, related_name="categories",null=True)
 
     
     def __str__(self):
