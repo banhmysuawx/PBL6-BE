@@ -14,3 +14,4 @@ factory_boy
 django-cors-headers
 drf_yasg
 sentry-sdk
+Pillow
