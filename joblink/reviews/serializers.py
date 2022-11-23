@@ -3,7 +3,7 @@ from .models import Review
 # from companies.serializers import CompanySerializer
 from companies.models import Company
 from accounts.models import User
-# from accounts.serializers import UserSerializer
+from accounts.serializers import UserSerializer
 
 
 class CompanyReviewSerializer(serializers.ModelSerializer):
@@ -27,6 +27,7 @@ class ReviewsSerializer(serializers.ModelSerializer):
         fields = ['id','rating','comment','company','user','created_at','author']
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('rating','comment','company')
