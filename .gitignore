@@ -66,7 +66,7 @@ env/
 src/static/
 
 # Environment file
-.env
+# .env
 
 # VS Code Folder
 .vscode/
