@@ -1,0 +1,29 @@
+#base image
+FROM python:3.9
+
+#maintainer
+LABEL Author="PBL6"
+
+# The enviroment variable ensures that the python output is set straight
+# to the terminal with out buffering it first
+ENV PYTHONBUFFERED 1
+
+RUN apt-get update && apt-get install -y  \
+    vim \
+    less \
+    curl \
+    zip \
+    unzip && \
+    apt-get clean && \
+    apt-get autoclean
+
+RUN pip3 install --no-cache-dir --upgrade pip
+
+COPY requirements.txt /
+RUN pip install -r requirements.txt	
+
+#directory to store app source code
+RUN mkdir /joblink
+	
+#copy the app code to image working directory
+COPY ./joblink /joblink

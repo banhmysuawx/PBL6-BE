@@ -1,0 +1,17 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+django-rest-swagger
+python-dotenv
+psycopg2
+asgiref
+black
+black
+flake8
+isort
+pre-commit
+factory_boy
+django-cors-headers
+drf_yasg
+sentry-sdk
+Pillow

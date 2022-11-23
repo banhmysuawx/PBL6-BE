@@ -1,0 +1,1 @@
+from applicants.serializers.applicant import ApplicantSerializer
