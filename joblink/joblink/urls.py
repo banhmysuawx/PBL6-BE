@@ -19,6 +19,8 @@ from rest_framework import permissions
 
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 # from accounts.views import *
 
@@ -52,5 +54,9 @@ urlpatterns = [
     path("comment_posts/" , include('comment_posts.urls')),
     path("like_comments/" , include('like_comments.urls')),
     path("dislike_comments/" , include('dislike_comments.urls')),
-    path("applications/" , include('applications.urls'))
+    path("seekers/" , include('seekers.urls')),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

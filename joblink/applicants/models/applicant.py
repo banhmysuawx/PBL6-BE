@@ -9,6 +9,9 @@ class STATUS_CHOICE(models.TextChoices):
     COMPLETE = "complete"
     INCOMPLETE = "incomplete"
 
+def name_file(instance, filename):
+    return "cv/"+"/".join([str(instance.candidate.id), filename])
+
 class Applicant(models.Model):
     candidate = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "applicants")
     job = models.ForeignKey(Job, on_delete= models.CASCADE, related_name = "applicants")
@@ -17,6 +20,8 @@ class Applicant(models.Model):
     status_do_test_date = models.DateTimeField(null=True, blank=True)
     status_interview_date = models.DateTimeField(null=True, blank=True)
     interview_date_official = models.DateTimeField(null=True,blank=True)
+    cv = models.FileField(null=True,blank=True, upload_to=name_file)
+    information_added =models.TextField(blank=True,null=True)
 
     class Meta:
         db_table = "applicants"
