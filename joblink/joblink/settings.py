@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "job",
     "like_comments",
     "dislike_comments",
-    "applications",
     "applicants",
     "seekers"
 ]
