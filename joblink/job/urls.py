@@ -2,7 +2,7 @@ from django.urls import path,include
 from job.views.job_category import JobCategoryView,JobCategoryDetailView
 from job.views.job_location import JobLocationView,JobLocationDetailView
 from job.views.job_skill import JobSkillView,JobSkillDetailView
-from job.views.job import JobView,JobDetailView,SumJobView,JobInCompanyView
+from job.views.job import JobView,JobDetailView,SumJobView,JobInCompanyView,JobListAdminView,JobDetailAdminView
 from job.views.job_category import CategoryJobInCompany
 from job.views.job_location import JobLocationInCompanyView
 from job.views.job_skill import JobSkillInCompanyView
@@ -25,6 +25,8 @@ urlpatterns = [
     path('skills/<int:pk>', JobSkillDetailView.as_view()),
     path('jobs', JobView.as_view()),
     path('jobs/<int:pk>', JobDetailView.as_view()),
+    path('jobs-list/admin', JobListAdminView.as_view()),
+    path('jobs-detail/admin', JobDetailAdminView.as_view()),
     path('jobs/sum_jobs', SumJobView.as_view()),
     path('',include(router.urls)),
 
