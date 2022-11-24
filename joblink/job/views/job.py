@@ -1,4 +1,5 @@
-from rest_framework import generics
+from rest_framework import generics,viewsets, status
+from rest_framework.decorators import action
 from job.models.job import Job
 from job.serializers.job import JobSerializer
 from rest_framework.views import APIView
@@ -19,10 +20,15 @@ class SumJobView(APIView):
         sum_job = Job.objects.all().count()
         return Response({'count': sum_job})
 
-class JobInCompanyView(generics.ListCreateAPIView):
-    serializer_class = JobSerializer
-    queryset = Job.objects.all()
+class JobInCompanyView(viewsets.ViewSet):
+    
+    @action(methods=['GET'],detail=False)
+    def get_jobs(self,request, *args, **kwargs):
+        id_company = self.request.query_params.get("company_id", None)
+        if id_company != None:
+            data = Job.objects.filter(company_id=id_company)
+            data = JobSerializer(data,many=True).data
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class JobDetailInCompanyView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = JobSerializer
-    queryset = Job.objects.all()
+    
