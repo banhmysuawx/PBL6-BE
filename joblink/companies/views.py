@@ -36,3 +36,11 @@ class CountCompanyView(APIView):
         sum_company = Company.objects.all().count()
         print(sum_company)
         return Response({'count': sum_company})
+
+class CompanyListAdminView(generics.ListCreateAPIView):
+    serializer_class= CompanySerializer
+    queryset = Company.objects.all()
+
+class CompanyDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class= CompanySerializer
+    queryset = Company.objects.all()

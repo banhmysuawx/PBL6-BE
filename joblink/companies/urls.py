@@ -1,6 +1,6 @@
 from django.urls import path
 
-from companies.views import CompanyListView , CompanyDetailView,TopCompanyListView,CountCompanyView
+from companies.views import CompanyListView , CompanyDetailView,TopCompanyListView,CountCompanyView,CompanyDetailAdminView,CompanyListAdminView
 
 urlpatterns = [
     path('companies', CompanyListView.as_view()),

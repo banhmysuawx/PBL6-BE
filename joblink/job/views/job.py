@@ -31,4 +31,12 @@ class JobInCompanyView(viewsets.ViewSet):
             return Response(data=data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class JobListAdminView(generics.ListCreateAPIView):
+    serializer_class = JobSerializer
+    queryset = Job.objects.filter(is_active=True)
+
+class JobDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = JobSerializer
+    queryset = Job.objects.filter(is_active=True)
+
     
