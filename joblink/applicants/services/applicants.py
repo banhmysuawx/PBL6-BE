@@ -13,3 +13,8 @@ class ApplicantService():
         job_ids = Job.objects.filter(company_id=id_company).only('id')
         applicants = Applicant.objects.filter(job_id__in=job_ids)
         return applicants
+
+    @classmethod
+    def get_all_applicant_by_candidate(self,id_candidate):
+        applicants = Applicant.objects.filter(candidate_id=id_candidate)
+        return applicants
