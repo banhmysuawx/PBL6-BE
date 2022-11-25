@@ -10,11 +10,11 @@ from job.serializers.job import JobUserSerializer
 
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter()
 
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter()
 
 class SumJobView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)

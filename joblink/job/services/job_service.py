@@ -6,7 +6,7 @@ class JobService():
     @classmethod
     def get_job_to_show_candidate(self):
         data = []
-        jobs = Job.objects.all()
+        jobs = Job.objects.filter(is_active=True)
         for job in jobs:
             comments = CommentPost.objects.filter(job_id=job.id)
             item = {
