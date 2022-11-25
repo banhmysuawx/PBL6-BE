@@ -5,6 +5,8 @@ from job.serializers.job import JobSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from job.services.job_service import JobService
+from job.serializers.job import JobUserSerializer
 
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
@@ -39,4 +41,11 @@ class JobDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(is_active=True)
 
+class JobInUserView(viewsets.ViewSet):
+
+    @action(methods=['GET'], detail=False)
+    def get_jobs(self, request, *args, **kwargs):
+        data = JobService.get_job_to_show_candidate()
+        data = JobUserSerializer(data, many=True).data
+        return Response(data=data, status= status.HTTP_200_OK)
     

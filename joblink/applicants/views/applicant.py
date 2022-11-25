@@ -57,4 +57,15 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    
+class ApplicantCandidateView(viewsets.ViewSet):
+
+    @action(methods=['GET',],detail=False)
+    def get_applicant(self,request,*args, **kwargs):
+        id_candidate = self.request.query_params.get("id_candidate",None)
+        if id_candidate != None:
+            data = ApplicantService.get_all_applicant_by_candidate(id_candidate)
+            if data!=None:
+                data = ApplicantSerializer(data,many=True).data
+                return Response(data=data,status=status.HTTP_200_OK)
+            return Response(data=None,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
