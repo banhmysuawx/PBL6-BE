@@ -48,4 +48,14 @@ class JobInUserView(viewsets.ViewSet):
         data = JobService.get_job_to_show_candidate()
         data = JobUserSerializer(data, many=True).data
         return Response(data=data, status= status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=True)
+    def job(self, request, pk=None):
+        data = JobService.get_job_by_id(pk)
+        if data!=None:
+            data = JobUserSerializer(data).data
+            return Response(data=data, status= status.HTTP_200_OK)
+        else:
+            return Response(dict(msg="Job is not existed"))
+
     
