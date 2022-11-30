@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     "like_comments",
     "dislike_comments",
     "applicants",
-    "seekers"
+    "seekers",
+    "favorites"
 ]
 
 MIDDLEWARE = [
