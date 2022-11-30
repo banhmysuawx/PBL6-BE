@@ -55,6 +55,7 @@ urlpatterns = [
     path("like_comments/" , include('like_comments.urls')),
     path("dislike_comments/" , include('dislike_comments.urls')),
     path("seekers/" , include('seekers.urls')),
+    path("favorites/" , include('favorites.urls'))
 
 ]
 
