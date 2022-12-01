@@ -58,4 +58,12 @@ class JobInUserView(viewsets.ViewSet):
         else:
             return Response(dict(msg="Job is not existed"))
 
+    @action(methods=['GET',],detail=False)
+    def filter_job(self, request, *args, **kwargs):
+        location = self.request.query_params.get('location',None)
+        text = self.request.query_params.get('text',None)
+        jobs = JobService.filter_job_by_location_and_text(location,text)
+        data = JobSerializer(jobs,many=True).data
+        return Response(data=data, status= status.HTTP_200_OK)
+
     
