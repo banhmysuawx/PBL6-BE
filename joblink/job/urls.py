@@ -2,7 +2,7 @@ from django.urls import path,include
 from job.views.job_category import JobCategoryView,JobCategoryDetailView
 from job.views.job_location import JobLocationView,JobLocationDetailView
 from job.views.job_skill import JobSkillView,JobSkillDetailView
-from job.views.job import JobView,JobDetailView,SumJobView,JobInCompanyView,JobListAdminView,JobDetailAdminView
+from job.views.job import JobView,JobDetailView,SumJobView,JobInCompanyView,JobListAdminView,JobDetailAdminView,JobInUserView
 from job.views.job_category import CategoryJobInCompany
 from job.views.job_location import JobLocationInCompanyView
 from job.views.job_skill import JobSkillInCompanyView
@@ -13,6 +13,8 @@ router.register(r'company', CategoryJobInCompany, basename='category-company')
 router.register(r'company',JobLocationInCompanyView, basename='job-company')
 router.register(r'company',JobSkillInCompanyView, basename='skill-company')
 router.register(r'company',JobInCompanyView, basename='job-company')
+router.register(r'user',JobInUserView, basename='job-user')
+
 
 
 
