@@ -13,6 +13,23 @@ class ApplicantView(generics.ListCreateAPIView):
     serializer_class = ApplicantSerializer
     parser_classes = [MultiPartParser,]
 
+    def create(self, request, *args, **kwargs):
+        id_job = request.data.get('job',None)
+        id_candidate = request.data.get('candidate',None)
+        if id_job != None and id_candidate != None:
+            try:
+                applicant = Applicant.objects.filter(job__id=id_job,candidate_id=id_candidate)
+                if len(applicant)==0:
+                    serializer = self.get_serializer(data=request.data)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                else:
+                    return Response(dict(msg="Applicant is existed"))
+            except Exception:
+                raise Exception
+
 class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
@@ -57,4 +74,15 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    
+class ApplicantCandidateView(viewsets.ViewSet):
+
+    @action(methods=['GET',],detail=False)
+    def get_applicant(self,request,*args, **kwargs):
+        id_candidate = self.request.query_params.get("id_candidate",None)
+        if id_candidate != None:
+            data = ApplicantService.get_all_applicant_by_candidate(id_candidate)
+            if data!=None:
+                data = ApplicantSerializer(data,many=True).data
+                return Response(data=data,status=status.HTTP_200_OK)
+            return Response(data=None,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

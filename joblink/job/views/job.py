@@ -5,14 +5,16 @@ from job.serializers.job import JobSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from job.services.job_service import JobService
+from job.serializers.job import JobUserSerializer
 
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter()
 
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
-    queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter()
 
 class SumJobView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -38,5 +40,22 @@ class JobListAdminView(generics.ListCreateAPIView):
 class JobDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(is_active=True)
+
+class JobInUserView(viewsets.ViewSet):
+
+    @action(methods=['GET'], detail=False)
+    def get_jobs(self, request, *args, **kwargs):
+        data = JobService.get_job_to_show_candidate()
+        data = JobUserSerializer(data, many=True).data
+        return Response(data=data, status= status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=True)
+    def job(self, request, pk=None):
+        data = JobService.get_job_by_id(pk)
+        if data!=None:
+            data = JobUserSerializer(data).data
+            return Response(data=data, status= status.HTTP_200_OK)
+        else:
+            return Response(dict(msg="Job is not existed"))
 
     
