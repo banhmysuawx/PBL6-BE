@@ -1,5 +1,8 @@
 from job.models.job import Job
 from comment_posts.models import CommentPost
+from job.models.job_location import JobLocation
+from django.db.models import Q
+
 
 class JobService():
 
@@ -28,5 +31,13 @@ class JobService():
             return data
         except:
             return None
+
+    @classmethod
+    def filter_job_by_location_and_text(self,location_name,text_find):
+        locations_id = JobLocation.objects.filter(city=location_name).only('id')
+        jobs = Job.objects.filter(locations__id__in=locations_id).filter(Q(name__contains=text_find) | Q(description__contains=text_find)
+        | Q(company__company_name__contains=text_find) | Q(skills__level_name__contains=text_find))
+        return jobs
+
         
 
