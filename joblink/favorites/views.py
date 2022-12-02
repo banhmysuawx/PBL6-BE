@@ -8,10 +8,14 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from .models import Favorite
-from .serializers import FavoriteSerializer
+from .serializers import FavoriteSerializer ,ListFavoriteJobSerializer
 
-class FavoriteView(generics.ListCreateAPIView):
-    serializer_class = FavoriteSerializer
+class ListJobFavoritesView(generics.ListAPIView):
+    queryset_class = FavoriteSerializer
+    queryset = Favorite.objects.all()
+    
+class FavoriteView(generics.CreateAPIView):
+    serializer_class = ListFavoriteJobSerializer
     queryset = Favorite.objects.all()
 
 class FavoriteDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -30,3 +34,4 @@ class ListJobFavoritesView(APIView):
                 list_job_favorites_of_user.append(favorite)
         serializer = FavoriteSerializer(list_job_favorites_of_user , many = True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+

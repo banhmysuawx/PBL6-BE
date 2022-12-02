@@ -4,6 +4,11 @@ from accounts.models import User
 from job.models import Job
 from .models import Favorite
 from job.models import JobLocation
+
+class ListFavoriteJobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields ='__all__'
 class FavoriteUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
