@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from applicants.serializers.applicant import ApplicantSerializer
 from applicants.models.applicant import Applicant
+from applicants.models.applicant_test import ApplicantTest
 from applicants.services.applicants import ApplicantService
 from applicants.services.applicant_test import ApplicantTestService
 
@@ -89,4 +90,15 @@ class ApplicantCandidateView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    
+class SaveResultView(viewsets.ViewSet):
+
+    @action(methods=['POST',],detail=False)
+    def save_result(self,request, *args, **kwargs):
+        id_candidate = self.request.query_params.get("id_candidate",None)
+        if id_candidate != None:
+            data = ApplicantTest.objects.filter(applicant__candidate_id=id_candidate)
+            if data!=None:
+                data.result = request.data.get('result',None)
+                data.save()
+            return Response(data=None,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
