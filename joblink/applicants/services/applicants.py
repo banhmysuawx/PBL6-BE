@@ -18,3 +18,4 @@ class ApplicantService():
     def get_all_applicant_by_candidate(self,id_candidate):
         applicants = Applicant.objects.filter(candidate_id=id_candidate)
         return applicants
+

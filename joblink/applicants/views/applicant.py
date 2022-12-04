@@ -6,6 +6,8 @@ from applicants.serializers.applicant import ApplicantSerializer
 from applicants.models.applicant import Applicant
 from applicants.services.applicants import ApplicantService
 from applicants.services.applicant_test import ApplicantTestService
+
+
 import datetime
 
 class ApplicantView(generics.ListCreateAPIView):
@@ -86,3 +88,5 @@ class ApplicantCandidateView(viewsets.ViewSet):
                 return Response(data=data,status=status.HTTP_200_OK)
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    

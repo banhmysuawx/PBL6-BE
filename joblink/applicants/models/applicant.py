@@ -5,7 +5,11 @@ from job.models.job import Job
 class STATUS_CHOICE(models.TextChoices):
     APPLY = "apply"
     TEST = "test"
-    INTERVIEW = "interview"
+    SET_SCHEDULE = "set_schedule"
+    INTERVIEW_PENDING = "interview_pending"
+    SCHEDULE_INTERVIEW = "schedule_interview"
+    CANCEL_INTERVIEW = "cancel_interview"
+    INTERVIEW_COMPLETE = "interview_complete"
     COMPLETE = "complete"
     INCOMPLETE = "incomplete"
 
