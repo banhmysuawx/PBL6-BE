@@ -27,4 +27,5 @@ urlpatterns = [
         name="password-reset-complete",
     ),
     path("change-password", ChangePasswordView.as_view(), name="change-password"),
+    path("me", GetMe.as_view(), name="me"),
 ]
