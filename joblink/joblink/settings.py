@@ -169,6 +169,9 @@ STATIC_URL = "static/"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+AVATAR_URL = '/avatar/'
+AVATAR_ROOT = os.path.join(BASE_DIR, 'avatar')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
