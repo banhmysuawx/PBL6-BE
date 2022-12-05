@@ -6,3 +6,4 @@ class PeriodTimeInterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeriodTimeInterview
         fields = "__all__"
+

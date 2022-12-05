@@ -57,8 +57,6 @@ class ApplicantInterviewService():
                         "available" : result
                     }
                     lst.append(item)
-               
-
             return lst
 
 

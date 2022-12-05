@@ -89,4 +89,16 @@ class ApplicantCandidateView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    
+    @action(methods=['PATCH'],detail=True)
+    def cancel_interview(self,request,*args, **kwargs):
+        id = kwargs['pk']
+        try:
+            applicant = Applicant.objects.get(pk=id)
+            applicant.status = "cancel_interview"
+            applicant.save()
+            data = ApplicantSerializer(applicant).data
+            return Response(data=data, status=status.HTTP_200_OK)
+        except:
+            return Response(dict(msg="Update not success"))
+
+
