@@ -1,6 +1,7 @@
 from applicants.models.applicant import Applicant
 from applicants.models.applicant_interview import ApplicantInterview
 from datetime import datetime,timedelta
+from job.models.job import Job
 
 class ApplicantInterviewService():
   
@@ -57,8 +58,28 @@ class ApplicantInterviewService():
                         "available" : result
                     }
                     lst.append(item)
-               
-
             return lst
+    
+    @classmethod
+    def get_event(self,id_company):
+        job_ids = Job.objects.filter(company_id=id_company).only("id")
+        applicant_ids = Applicant.objects.filter(job_id__in=job_ids).only("id")
+        applicant_interview = ApplicantInterview.objects.filter(applicant_id__in = applicant_ids,active=True)
+        list_data = []
+        for item in applicant_interview:
+            applicant = Applicant.objects.get(pk=item.applicant.id)
+            print(applicant)
+            job = Job.objects.get(pk=applicant.job.id)
+            title = "Interview for " + job.name
+            data = {
+                "title" : title,
+                "start" : item.start_interview,
+                "end" :item.end_interview
+            }
+            if data['start']!=None:
+                list_data.append(data)
+        return list_data
+
+            
 
 

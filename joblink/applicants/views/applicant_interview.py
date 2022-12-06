@@ -6,7 +6,7 @@ from applicants.serializers.period_time_interview import PeriodTimeInterviewSeri
 from applicants.models.applicant_interview import ApplicantInterview
 from datetime import datetime
 from applicants.services.aplicant_interview import ApplicantInterviewService
-from applicants.serializers.applicant_interview import ListPeriodTimeSerializer
+from applicants.serializers.applicant_interview import ListPeriodTimeSerializer,ApplicantInterviewEventSerializer
 from applicants.models.applicant import Applicant
 from applicants.models.period_time_interview import PeriodTimeInterview
 
@@ -130,6 +130,16 @@ class GetApplicantInterviewView(viewsets.ViewSet):
             return Response(data=data,status=status.HTTP_200_OK)
         except:
             return Response(dict(msg="Applicant Interview is existed"))
+
+    @action(methods=['GET'],detail=False)
+    def get_event(self,request,*args, **kwargs):
+        id_company = self.request.query_params.get("id_company",None)
+        try:
+            data = ApplicantInterviewService.get_event(id_company)
+            data = ApplicantInterviewEventSerializer(data,many=True).data
+            return Response(data=data,status=status.HTTP_200_OK)
+        except:
+            return Response(dict(msg="Event is not existed"))
 
 class ApplicantInterviewCandidateView(viewsets.ViewSet):
 
