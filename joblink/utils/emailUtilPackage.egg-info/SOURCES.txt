@@ -1,9 +1,0 @@
-setup.py
-config/__init__.py
-config/env_config.py
-emailUtilPackage.egg-info/PKG-INFO
-emailUtilPackage.egg-info/SOURCES.txt
-emailUtilPackage.egg-info/dependency_links.txt
-emailUtilPackage.egg-info/top_level.txt
-email_helper/__init__.py
-email_helper/config_email.py
