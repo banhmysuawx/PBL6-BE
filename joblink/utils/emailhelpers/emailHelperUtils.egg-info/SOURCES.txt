@@ -1,0 +1,11 @@
+CHANGELOG.txt
+LICENCE.txt
+MANIFEST.in
+README.txt
+__init__.py
+config_email.py
+setup.py
+emailHelperUtils.egg-info/PKG-INFO
+emailHelperUtils.egg-info/SOURCES.txt
+emailHelperUtils.egg-info/dependency_links.txt
+emailHelperUtils.egg-info/top_level.txt

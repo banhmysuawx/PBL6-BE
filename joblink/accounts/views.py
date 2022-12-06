@@ -18,7 +18,7 @@ from rest_framework.exceptions import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from utils import email_helper
+from utils import emailhelpers
 
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -68,7 +68,7 @@ class RegisterView(generics.GenericAPIView):
             "email_subject": "Verify your email",
         }
 
-        email_helper.send(data)
+        emailhelpers.send(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
@@ -133,7 +133,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
                 "to_email": user.email,
                 "email_subject": "Reset your passsword",
             }
-            email_helper.send(data)
+            emailhelpers.send(data)
         return Response(
             {"success": "We have sent you a link to reset your password"},
             status=status.HTTP_200_OK,
