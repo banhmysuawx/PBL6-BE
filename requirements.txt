@@ -15,3 +15,6 @@ django-cors-headers
 drf_yasg
 sentry-sdk
 Pillow
+python-logstash
+django-elasticsearch-dsl
+django-elasticsearch-dsl-drf
