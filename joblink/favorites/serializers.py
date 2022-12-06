@@ -23,7 +23,7 @@ class JobSkillSerializer(serializers.ModelSerializer):
 class CompanyJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['profile_description','established_date','image','company_name','company_location']
+        fields = ['id','profile_description','established_date','image','company_name','company_location']
 
 class JobLocationFavoritesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +36,7 @@ class FavoriteJobSerializer(serializers.ModelSerializer):
     company = CompanyJobSerializer(many = False)
     class Meta:
         model = Job
-        fields = ['name','salary','description','locations','skills','company']
+        fields = ['id','name','salary','description','locations','skills','company']
 
 class FavoriteSerializer(serializers.ModelSerializer):
     user = FavoriteUserSerializer(many = False)
