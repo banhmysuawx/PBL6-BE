@@ -2,7 +2,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from django.urls import path
 from django.views.generic import RedirectView
-
 from .views import *
 
 urlpatterns = [

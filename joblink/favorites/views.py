@@ -35,3 +35,13 @@ class ListJobFavoritesView(APIView):
         serializer = FavoriteSerializer(list_job_favorites_of_user , many = True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class JobFavoriteDelete(APIView):
+    # serializer_class = FavoriteSerializer
+    def delete(self, request, job_id, format=None):
+        favorite = self.get_object(job_id)
+        print("pk",job_id)
+        print("favorite",favorite)
+        favorite.delete()
+        return Response("Delete OK",status=status.HTTP_204_NO_CONTENT)
+
+
