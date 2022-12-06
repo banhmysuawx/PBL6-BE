@@ -224,9 +224,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://api.quangdinh.me",
     "http://pbl.quangdinh.me",
 ]
-
+SENTRY_DNS = os.getenv("SENTRY_DNS")
 sentry_sdk.init(
-    dsn="https://d71aeed1c3894509b0d855783970a18c@o4504158092722176.ingest.sentry.io/4504158093836288",
+    dsn=SENTRY_DNS,
     integrations=[
         DjangoIntegration(),
     ],
