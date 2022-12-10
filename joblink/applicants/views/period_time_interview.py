@@ -29,9 +29,9 @@ class PeriodTimeCandidate(viewsets.ViewSet):
 
     @action(methods=['GET',], detail=False)
     def get_times_interview(self, request, *args, **kwargs):
-        id_interview = self.request.query_params.get("id_applicant_interview",None)
+        id_interview = self.request.query_params.get("id_applicant",None)
         if id_interview != None:
-            applicant_interview = ApplicantInterview.objects.get(pk=id_interview)
+            applicant_interview = ApplicantInterview.objects.get(applicant_id=id_interview)
             if (applicant_interview.choice_set_schedule_interview=="manual"):
                 data=PeriodTimeService.get_time_manual_for_candidate(id_interview)
             else:
