@@ -18,3 +18,4 @@ Pillow
 python-logstash
 django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
+pbl6packageg2==0.0.1
