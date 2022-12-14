@@ -13,7 +13,8 @@ from pathlib import Path
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from utils import config
+# from utils import config
+from pbl6packageg2 import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,7 +62,7 @@ INSTALLED_APPS = [
     "seekers",
     "favorites",
     "statisticals",
-    # "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl",
     # "django_elasticsearch_dsl_drf",
 ]
 
@@ -237,21 +238,18 @@ sentry_sdk.init(
 )
 
 # Elasticsearch
-# ELASTICSEARCH_DSL={
-#     'default': {
-#         'hosts': 'localhost:9200'
-#     },
-# }
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': 'velname)s %(message)s'
         },
     },
     'handlers': {
@@ -264,22 +262,21 @@ LOGGING = {
             'level': 'WARNING',
             'class': 'logstash.TCPLogstashHandler',
             'host': 'localhost',
-            'port': 50000,  # Default value: 5000
-            'version': 1,
-            'message_type': 'django_logstash',  # 'type' field in logstash message. Default value: 'logstash'.
-            'fqdn': False,  # Fully qualified domain name. Default value: false.
-            'tags': ['django.request'],  # list of tags. Default: None.
+            'port': 5959, # Default value: 5959
+            'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+            'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
+            'fqdn': False, # Fully qualified domain name. Default value: false.
+            'tags': ['django.request'], # list of tags. Default: None.
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
         'django.request': {
             'handlers': ['logstash'],
             'level': 'WARNING',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['console'],
             'propagate': True,
         },
     }
