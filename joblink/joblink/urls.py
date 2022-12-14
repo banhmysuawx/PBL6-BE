@@ -37,7 +37,8 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-
+def trigger_error(request):
+    division_by_zero = 1 / 0
 urlpatterns = [
     path(
         "",
@@ -47,6 +48,7 @@ urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("admin/", admin.site.urls),
     path("auth/", include("accounts.urls")),
+    path('sentry-debug/', trigger_error),
     path("companies/" , include('companies.urls')),
     path("reviews/" , include('reviews.urls')),
     path("jobs/" , include('job.urls')),
@@ -55,8 +57,11 @@ urlpatterns = [
     path("like_comments/" , include('like_comments.urls')),
     path("dislike_comments/" , include('dislike_comments.urls')),
     path("seekers/" , include('seekers.urls')),
+    path("favorites/" , include('favorites.urls')),
+    path("statisticals/" , include('statisticals.urls'))
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.AVATAR_URL, document_root=settings.AVATAR_ROOT)

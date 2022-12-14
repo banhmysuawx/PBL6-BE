@@ -13,3 +13,9 @@ pre-commit
 factory_boy
 django-cors-headers
 drf_yasg
+sentry-sdk
+Pillow
+python-logstash
+django-elasticsearch-dsl
+django-elasticsearch-dsl-drf
+pbl6packageg2==0.0.1

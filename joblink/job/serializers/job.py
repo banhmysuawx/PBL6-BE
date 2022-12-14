@@ -1,14 +1,13 @@
 from rest_framework import serializers
 from job.models.job import Job
-from companies.serializers import CompanySerializer
 from job.serializers.job_location import JobLocationSerializer
 from job.serializers.job_skill import JobSkillSerializer
+from companies.serializers import CompanySerializer
+from companies.serializers import CompanySerializer
+from comment_posts.serializers import CommentPostSerializer
 
 class JobSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format="%Y-%m-%d",read_only=True)
-    # company = CompanySerializer(read_only=True)
-    # locations = JobLocationSerializer(many=True,read_only=True) 
-    # skills = JobSkillSerializer(many=True,read_only=True)
 
     class Meta:
         model = Job
@@ -18,4 +17,22 @@ class JobSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         locations_data = [item.location_name for item in instance.locations.all()]
         ret['locations_name']=locations_data
+        ret['category_name'] = instance.category.name
         return ret
+
+class JobDetailSerializer(serializers.ModelSerializer):
+    company = CompanySerializer()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d",read_only=True)
+    skills = JobSkillSerializer(many=True)
+    locations = JobLocationSerializer(many=True)
+
+    class Meta:
+        model = Job
+        fields = "__all__"
+
+
+class JobUserSerializer(serializers.Serializer):
+    job = JobDetailSerializer()
+    comments = CommentPostSerializer(many=True)
+
+

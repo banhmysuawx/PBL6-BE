@@ -25,7 +25,7 @@ class TopCompanyListView(APIView):
     def get(self, request, format=None):
         top_company_list = []
         for company in Company.objects.all():
-            if int(company.average_rating['rating__avg']) > 4:
+            if round(float(company.average_rating['rating__avg']),1) > 4:
                 top_company_list.append(company)
         serializer = CompanySerializer(top_company_list, many = True)
         return Response(serializer.data)
@@ -36,3 +36,11 @@ class CountCompanyView(APIView):
         sum_company = Company.objects.all().count()
         print(sum_company)
         return Response({'count': sum_company})
+
+class CompanyListAdminView(generics.ListCreateAPIView):
+    serializer_class= CompanySerializer
+    queryset = Company.objects.all()
+
+class CompanyDetailAdminView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class= CompanySerializer
+    queryset = Company.objects.all()

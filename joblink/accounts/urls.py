@@ -2,7 +2,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from django.urls import path
 from django.views.generic import RedirectView
-
 from .views import *
 
 urlpatterns = [
@@ -27,4 +26,5 @@ urlpatterns = [
         name="password-reset-complete",
     ),
     path("change-password", ChangePasswordView.as_view(), name="change-password"),
+    path("me", GetMe.as_view(), name="me"),
 ]

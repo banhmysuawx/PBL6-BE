@@ -19,6 +19,9 @@ class Job(models.Model):
     limited_day_do_test = models.IntegerField(default=0,null=True, blank=True)
     limited_day_confirm_schedule = models.IntegerField(default=0,null=True, blank=True)
     expected_result_test = models.FloatField(default=0,null=True, blank=True)
+    limit_time_to_interview = models.IntegerField(default=10,null=True,blank=True)
+    id_test = models.IntegerField(default=0,null=True, blank=True)
+
 
     def __str__(self):
         return self.name
