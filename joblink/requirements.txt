@@ -17,4 +17,5 @@ sentry-sdk
 Pillow
 python-logstash
 django-elasticsearch-dsl
-django-elasticsearch-dsl-drf
+django-elasticsearch-dsl
+pbl6packageg2==0.0.1

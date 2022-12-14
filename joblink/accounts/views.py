@@ -18,7 +18,8 @@ from rest_framework.exceptions import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from utils import emailhelper
+# from utils import emailhelper
+from pbl6packageg2 import emailhelper
 
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
