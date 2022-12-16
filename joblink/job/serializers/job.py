@@ -5,6 +5,7 @@ from job.serializers.job_skill import JobSkillSerializer
 from companies.serializers import CompanySerializer
 from companies.serializers import CompanySerializer
 from comment_posts.serializers import CommentPostSerializer
+from applicants.models.applicant import Applicant
 
 class JobSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format="%Y-%m-%d",read_only=True)
@@ -16,8 +17,11 @@ class JobSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         locations_data = [item.location_name for item in instance.locations.all()]
+        list_status= ['apply','test','set_schedule','interview_pending','schedule_interview','interview_complete']
+        number = Applicant.objects.filter(job_id=instance.id, status__in = list_status).count()
         ret['locations_name']=locations_data
         ret['category_name'] = instance.category.name
+        ret['number_apply'] = number
         return ret
 
 class JobDetailSerializer(serializers.ModelSerializer):

@@ -9,6 +9,7 @@ from applicants.services.applicants import ApplicantService
 from applicants.services.applicant_test import ApplicantTestService
 from applicants.models.applicant_interview import ApplicantInterview
 from accounts.serializers import UserSerializer
+from job.models.job import Job
 
 import datetime
 
@@ -117,6 +118,33 @@ class ApplicantCandidateView(viewsets.ViewSet):
         except:
             return Response(dict(msg="Update not success"))
 
+    @action(methods=['PATCH'],detail=False)
+    def done_test(self, request, *args, **kwargs):
+        id_job = request.data.get("job",None)
+        id_candidate = request.data.get("user",None)
+        result = request.data.get("result", None)
+        if id_job!= None and id_candidate!=None and result!=None:
+            try:
+                applicant = Applicant.objects.get(job_id=id_job, candidate_id= id_candidate)
+                result_job = Job.objects.get(pk=id_job).expected_result_test
+                test = ApplicantTest.objects.get(applicant_id=applicant.id)
+                if test.result==0:
+                    test.result = result/100
+                    test.save()
+                    if result_job<=(result/100):
+                        applicant.status = "set_schedule"
+                        applicant.save()
+                        data = ApplicantSerializer(applicant).data
+                        return Response(dict(data=data, status=status.HTTP_200_OK,msg="Pass Test, Please waiting schedule "))
+                    else :
+                        applicant.status = "incomplete"
+                        applicant.save()
+                        data = ApplicantSerializer(applicant).data
+                        return Response(dict(data=data, status=status.HTTP_200_OK,msg="Fail Test, Good luck later"))
+                else:
+                    return Response(dict(msg="Sorry. You can't save result"))
+            except:
+                return Response(dict(msg="Update not success"))
 
 class SaveResultView(viewsets.ViewSet):
 
