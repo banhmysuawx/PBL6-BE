@@ -39,4 +39,7 @@ class JobUserSerializer(serializers.Serializer):
     job = JobDetailSerializer()
     comments = CommentPostSerializer(many=True)
 
-
+class JobUserStatusSerializer(serializers.Serializer):
+    job = JobDetailSerializer()
+    comments = CommentPostSerializer(many=True)
+    is_apply = serializers.BooleanField()

@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from job.services.job_service import JobService
-from job.serializers.job import JobUserSerializer
+from job.serializers.job import JobUserSerializer,JobUserStatusSerializer
+from applicants.models.applicant import Applicant
 
 class JobView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
@@ -15,6 +16,17 @@ class JobView(generics.ListCreateAPIView):
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        num_applicant = Applicant.objects.filter(job_id=instance.id).count()
+        if num_applicant==0:
+            self.perform_destroy(instance)
+            return Response(dict(msg="Delete job successfully!",status=status.HTTP_204_NO_CONTENT))
+        else:
+            instance.is_active=False
+            instance.save()
+            return Response(dict(msg="Job has candidate apply. Do you want to unpublish job?"))
 
 class SumJobView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -65,5 +77,17 @@ class JobInUserView(viewsets.ViewSet):
         jobs = JobService.filter_job_by_location_and_text(location,text)
         data = JobSerializer(jobs,many=True).data
         return Response(data=data, status= status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=True)
+    def job_is_apply(self, request, *args, **kwargs):
+        id_job = kwargs['pk']
+        id_user = self.request.query_params.get('id_user',None)
+        if id_job!= None and id_user!=None:
+            try:
+                data = JobService.get_job_with_status_by_id(id_job,id_user)
+                data = JobUserStatusSerializer(data).data
+                return Response(data=data, status= status.HTTP_200_OK)
+            except:
+                return Response(dict(msg="Job is not existed"))
 
     
