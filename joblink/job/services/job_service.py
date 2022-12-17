@@ -1,6 +1,7 @@
 from job.models.job import Job
 from comment_posts.models import CommentPost
 from job.models.job_location import JobLocation
+from job.models.job_skill import JobSkill
 from applicants.models.applicant import Applicant
 from django.db.models import Q
 
@@ -46,10 +47,23 @@ class JobService():
             return None
 
     @classmethod
-    def filter_job_by_location_and_text(self,location_name,text_find):
-        locations_id = JobLocation.objects.filter(city=location_name).only('id')
-        jobs = Job.objects.filter(locations__id__in=locations_id).filter(Q(name__contains=text_find) | Q(description__contains=text_find)
-        | Q(company__company_name__contains=text_find) | Q(skills__level_name__contains=text_find))
+    def filter_job_by_location_and_text(self,location_name,text_find, skill_name):
+        list_location_name = []
+        if location_name=='All':
+            location_name = ''
+        elif location_name=='Other':
+            list_location_name = ['Ho Chi Minh', 'Ha Noi', 'Da Nang']
+        if skill_name=='All':
+            skill_name = ''
+        if len(list_location_name)==0:
+            locations_id = JobLocation.objects.filter(city__icontains=location_name).only('id')
+        else:
+            locations_id = JobLocation.objects.exclude(city__in=list_location_name).only('id')
+        skills_id = JobSkill.objects.filter(level_name__icontains=skill_name).only('id')
+        text_find_strip = text_find.strip()
+        jobs = Job.objects.filter(locations__id__in=locations_id,skills__id__in=skills_id).filter(Q(name__icontains=text_find_strip) | Q(description__icontains=text_find_strip)
+        | Q(company__company_name__icontains=text_find_strip) | Q(skills__level_name__icontains=text_find_strip)).distinct()
+        print(jobs)
         return jobs
 
         

@@ -10,6 +10,7 @@ from applicants.services.applicant_test import ApplicantTestService
 from applicants.models.applicant_interview import ApplicantInterview
 from accounts.serializers import UserSerializer
 from job.models.job import Job
+from django.db.models import Q
 
 import datetime
 
@@ -89,6 +90,15 @@ class ApplicantCompanyView(viewsets.ViewSet):
                 return Response(data=data,status=status.HTTP_200_OK)
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    # @action(methods=['GET'], detail=False)
+    # def filter_applicants(self, request, *args, **kwargs):
+    #     text = self.request.query_params.get("text",'')
+    #     sort_by = self.request.query_params.get("sort_by","apply_date")
+    #     status = self.request.query_params.get("status",None)
+    #     try:
+    #         applicant = Applicant.objects.filter(status=status, candidate__)
+
 
 class ApplicantCandidateView(viewsets.ViewSet):
 

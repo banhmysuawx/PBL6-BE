@@ -35,12 +35,12 @@ class PeriodTimeService():
     def get_time_manual_for_candidate(self,id_applicant_interview):
         now = datetime.now()
         try:
-            periods_applicant = PeriodTimeInterview.objects.filter(applicant_interview_id=id_applicant_interview, start_time__gte=now).order_by('start_time')
+            periods_applicant = PeriodTimeInterview.objects.filter(applicant_interview__applicant_id=id_applicant_interview, start_time__gte=now).order_by('start_time')
             days = list(set([item.start_time.date() for item in periods_applicant]))
             results = []
             for day in days:
                 time_items = []
-                times_manual = PeriodTimeInterview.objects.filter(applicant_interview_id=id_applicant_interview,start_time__date=day).order_by('start_time')
+                times_manual = PeriodTimeInterview.objects.filter(applicant_interview__applicant_id=id_applicant_interview,start_time__date=day).order_by('start_time')
                 times_company = ApplicantInterview.objects.filter(start_interview__date=day).values_list('start_interview','end_interview')
                 for time_manual in times_manual:
                     is_check = True
