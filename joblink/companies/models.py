@@ -17,5 +17,5 @@ class Company(models.Model):
     def average_rating(self):
         if hasattr(self, '_average_rating'):
             return self._average_rating
-        return self.reviews.aggregate(Avg('rating'))
+        return self.reviews.aggregate(round(Avg('rating'),1))
    
