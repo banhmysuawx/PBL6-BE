@@ -1,5 +1,6 @@
 from applicants.models.applicant import Applicant
 from job.models.job import Job
+from accounts.models import User
 
 class ApplicantService():
 
@@ -19,3 +20,13 @@ class ApplicantService():
         applicants = Applicant.objects.filter(candidate_id=id_candidate)
         return applicants
 
+    @classmethod
+    def get_all_candidate_by_company(self,id_company):
+        job_ids = Job.objects.filter(company_id=id_company).only('id')
+        candidate_ids = Applicant.objects.filter(job_id__in=job_ids).only('candidate_id')
+        lst = []
+        for item in candidate_ids:
+            lst.append(item.candidate_id)
+        candidates = User.objects.filter(id__in=lst)
+        print(candidates)
+        return candidates

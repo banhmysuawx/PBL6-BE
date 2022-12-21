@@ -6,5 +6,5 @@ urlpatterns = [
     path('favorites/create', FavoriteView.as_view()),
     path('favorites/detail/<int:pk>', FavoriteDetailView.as_view()),
     path('favorites/<int:user_id>', ListJobFavoritesView.as_view()),
-    path('favorites/delete/<int:job_id>', JobFavoriteDelete.as_view())
+    path('favorites/delete/<int:favorite_id>', JobFavoriteDelete.as_view())
 ]

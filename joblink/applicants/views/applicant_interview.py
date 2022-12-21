@@ -6,7 +6,7 @@ from applicants.serializers.period_time_interview import PeriodTimeInterviewSeri
 from applicants.models.applicant_interview import ApplicantInterview
 from datetime import datetime
 from applicants.services.aplicant_interview import ApplicantInterviewService
-from applicants.serializers.applicant_interview import ListPeriodTimeSerializer
+from applicants.serializers.applicant_interview import ListPeriodTimeSerializer,ApplicantInterviewEventSerializer
 from applicants.models.applicant import Applicant
 from applicants.models.period_time_interview import PeriodTimeInterview
 
@@ -130,3 +130,39 @@ class GetApplicantInterviewView(viewsets.ViewSet):
             return Response(data=data,status=status.HTTP_200_OK)
         except:
             return Response(dict(msg="Applicant Interview is existed"))
+
+    @action(methods=['GET'],detail=False)
+    def get_event(self,request,*args, **kwargs):
+        id_company = self.request.query_params.get("id_company",None)
+        try:
+            data = ApplicantInterviewService.get_event(id_company)
+            data = ApplicantInterviewEventSerializer(data,many=True).data
+            return Response(data=data,status=status.HTTP_200_OK)
+        except:
+            return Response(dict(msg="Event is not existed"))
+
+class ApplicantInterviewCandidateView(viewsets.ViewSet):
+
+    @action(methods=['PATCH'],detail=False)
+    def confirm_interview(self,request,*args, **kwargs):
+        try:
+            id = self.request.query_params.get("id_applicant")
+            day = self.request.data.get("day",None)
+            start_time = self.request.data.get("start_time",None)
+            end_time = self.request.data.get("end_time",None)
+            start_str = day +" " + start_time
+            start_interview = datetime.strptime(start_str, '%Y-%m-%d %H:%M')
+            end_str = day + " " + end_time
+            end_interview = datetime.strptime(end_str, '%Y-%m-%d %H:%M')
+            applicant_interview = ApplicantInterview.objects.get(applicant_id=id)
+            applicant_interview.start_interview = start_interview
+            applicant_interview.end_interview = end_interview
+            applicant_interview.save()
+            applicant = Applicant.objects.get(pk=id)
+            applicant.status = 'schedule_interview'
+            applicant.interview_date_official = start_interview
+            applicant.save()
+            data = ApplicantInterviewSerializer(applicant_interview).data
+            return Response(data=data, status=status.HTTP_200_OK)
+        except :
+            return Response(dict(msg="Confirm interview fail"))

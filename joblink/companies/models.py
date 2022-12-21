@@ -19,6 +19,3 @@ class Company(models.Model):
             return self._average_rating
         return self.reviews.aggregate(Avg('rating'))
 
-class Round(Func):
-    function = 'ROUND'
-    template='%(function)s(%(expressions)s, 2)'
