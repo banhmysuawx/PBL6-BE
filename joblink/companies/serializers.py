@@ -7,7 +7,7 @@ class CompanySerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     reviews = ReviewsSerializer(many = True)
     def get_average_rating(self, obj):
-        return obj.average_rating
+        return int(obj.average_rating['rating__avg'])
     class Meta:
         model = Company
         fields = ('id','profile_description','established_date','image','company_name','company_location','average_rating','reviews')

@@ -1,7 +1,7 @@
 from django.db import models
 from accounts.models import User
 from django.db.models import Avg
-
+from django.db.models import Func
 # Create your models here.
 class Company(models.Model):
     user = models.OneToOneField(User ,on_delete = models.CASCADE , related_name="company")
@@ -18,4 +18,7 @@ class Company(models.Model):
         if hasattr(self, '_average_rating'):
             return self._average_rating
         return self.reviews.aggregate(Avg('rating'))
-   
+
+class Round(Func):
+    function = 'ROUND'
+    template='%(function)s(%(expressions)s, 2)'

@@ -14,6 +14,15 @@ class CompanyListView(generics.ListCreateAPIView):
     serializer_class= CompanySerializer
     queryset = Company.objects.all()
 
+class GetCompany(APIView):
+    def get(self, request, *args, **kwargs):
+        company_list = []
+        for company in Company.objects.all():
+            round(company.average_rating['rating__avg'],2)
+            company_list.append(company)
+        serializer = CompanySerializer(company_list, many = True)
+        print(company_list)
+        return Response(serializer.data)
 # API GET DETAIL COMPANY
 class CompanyDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
