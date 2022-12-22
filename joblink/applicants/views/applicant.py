@@ -50,11 +50,12 @@ class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             ApplicantTestService.create_applicant_test(instance.id)
+            return Response(dict(data=serializer.data, status=status.HTTP_200_OK,msg="Congratulations! You have passed the CV. Please do test on time"))
         else:
             serializer = self.get_serializer(instance, data=request_data, partial=True)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
-        return Response(data=serializer.data)
+            return Response(dict(data=serializer.data, status=status.HTTP_200_OK,msg="Sorry, You aren't suitable for current position."))
 
 class ApplicantCompanyView(viewsets.ViewSet):
 
@@ -118,13 +119,16 @@ class ApplicantCandidateView(viewsets.ViewSet):
         id = kwargs['pk']
         try:
             applicant = Applicant.objects.get(pk=id)
-            applicant.status = "cancel_interview"
-            applicant.save()
-            applicant_interview = ApplicantInterview.objects.get(applicant_id=id)
-            applicant_interview.active = False
-            applicant_interview.save()
-            data = ApplicantSerializer(applicant).data
-            return Response(data=data, status=status.HTTP_200_OK)
+            if applicant.status == "interview_pending" or applicant.status == "interview_pending":
+                applicant.status = "cancel_interview"
+                applicant.save()
+                applicant_interview = ApplicantInterview.objects.get(applicant_id=id)
+                applicant_interview.active = False
+                applicant_interview.save()
+                data = ApplicantSerializer(applicant).data
+                return Response(data=data, status=status.HTTP_200_OK)
+            else:
+                return Response(dict(status=status.HTTP_200_OK,msg="You can't cancel interview"))
         except:
             return Response(dict(msg="Update not success"))
 

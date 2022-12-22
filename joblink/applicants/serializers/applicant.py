@@ -22,6 +22,8 @@ class ApplicantSerializer(serializers.ModelSerializer):
                 applicant_test = ApplicantTest.objects.get(applicant_id=instance.id)
                 ret['expired_format_day'] = applicant_test.date_expired_at.strftime("%Y-%m-%d") 
                 ret['result_test'] = applicant_test.result
+            if (instance.interview_date_official != ''):
+                ret['interview_official_format_day'] = instance.interview_date_official.strftime("%Y-%m-%d") 
         except Exception:
             print("err")
         return ret
