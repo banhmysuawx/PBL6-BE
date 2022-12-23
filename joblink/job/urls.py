@@ -24,8 +24,8 @@ urlpatterns = [
     path('skills/<int:pk>', JobSkillDetailView.as_view()),
     path('jobs', JobView.as_view(), name="job"),
     path('jobs/<int:pk>', JobDetailView.as_view()),
-    path('jobs-list/admin', JobListAdminView.as_view()),
-    path('jobs-detail/admin', JobDetailAdminView.as_view()),
-    path('jobs/sum_jobs', SumJobView.as_view()),
+    path('admin/jobs-list', JobListAdminView.as_view()),
+    path('admin/jobs-detail', JobDetailAdminView.as_view()),
+    path('admin/jobs/sum_jobs', SumJobView.as_view()),
     path('',include(router.urls)),
 ]

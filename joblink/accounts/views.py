@@ -12,14 +12,19 @@ from accounts.serializers import (
     SetNewPasswordSerializer,
     UserCreateSerializer,
     UserSerializer,
+    ListUsersSerializer
 )
+import json
+from collections import defaultdict
 from rest_framework import generics, permissions, views
 from rest_framework.exceptions import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 # from utils import emailhelper
 from pbl6packageg2 import emailhelper
+from marshmallow import Schema, fields
 
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -32,7 +37,7 @@ from django.utils.encoding import (
     smart_str,
 )
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from rest_framework.views import APIView
 # Create your views here.
 
 
@@ -244,3 +249,51 @@ class GetMe(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+class ObjectSchema(Schema):
+    username = fields.Str()
+    email = fields.Str()
+    role = fields.Str()
+    gender = fields.Str()
+    is_active = fields.Str()
+    created_at = fields.Str()
+    updated_at = fields.Str()
+
+class GetAllAccounts(APIView):
+    def get(self, request, format = None):
+        account_list = []
+        for user in User.objects.all():
+            account_list.append(user)
+        object_schema = ObjectSchema()
+        json_string = object_schema.dumps(account_list, many=True,indent = 6)
+        print("json", json_string)
+        return HttpResponse(json_string)
+
+class DeleteUpdateAccount(generics.DestroyAPIView):
+    serializer_class =  UserSerializer
+    queryset = User.objects.all()
+
+class SumAccount(APIView):
+    def get(self, request , format =None):
+        sum_account = User.objects.all().count()
+        print(sum_account)
+        return Response({'sum_account': sum_account})
+
+class SumSeeker(APIView):
+    def get(self, request , format =None):
+        seeker_list = []
+        for user in User.objects.all():
+            if user.role == 'seeker':
+                seeker_list.append(user)
+        sum_seeker = len(seeker_list)
+        return Response({'seeker_count': sum_seeker})
+
+class SumEmployer(APIView):
+    def get(self, request , format =None):
+        employer_list = []
+        for user in User.objects.all():
+            if user.role == 'employer':
+                employer_list.append(user)
+        sum_employer = len(employer_list)
+        return Response({'employer_count': sum_employer})
+

@@ -44,7 +44,7 @@ class CountCompanyView(APIView):
     def get(self, request , format =None):
         sum_company = Company.objects.all().count()
         print(sum_company)
-        return Response({'count': sum_company})
+        return Response({'sum_company': sum_company})
 
 class CompanyListAdminView(generics.ListCreateAPIView):
     serializer_class= CompanySerializer
