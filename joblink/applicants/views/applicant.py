@@ -11,6 +11,8 @@ from applicants.models.applicant_interview import ApplicantInterview
 from accounts.serializers import UserSerializer
 from job.models.job import Job
 from django.db.models import Q
+from pbl6packageg2 import emailhelper
+
 
 import datetime
 
@@ -68,6 +70,38 @@ class ApplicantCompanyView(viewsets.ViewSet):
                 return Response(data=data,status=status.HTTP_200_OK)
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['GET',],detail=True)
+    def send_email_schedule(self,request,*args, **kwargs):
+        try:
+            id = kwargs['pk']
+            applicant = Applicant.objects.get(pk=id)
+            email = applicant.candidate.email
+            username = applicant.candidate.username
+            time = applicant.interview_date_official.strftime("%m/%d/%Y, %H:%M:%S")
+            company_name= applicant.job.company.company_name
+            name_job = applicant.job.name
+            print(name_job)
+            if id!=None:
+                email_body = (
+                "Dear "+ username + "\n"
+                + " Thank you for your interest in " + company_name + " and for submitting an application for " + name_job
+                + ". As part of our selection process, we would like to invite you to interview: \n" 
+                + " Time: " + time + "\n"
+                + " Venue: " + "https://meet.google.com/qij-hddv-dxt"
+                )
+                print(email_body)
+
+                data = {
+                    "email_body": email_body,
+                    "to_email": email,
+                    "email_subject": "["+ company_name +"]" +" Invitation for " +  name_job 
+                }
+                emailhelper.send(data)
+            return Response(status=status.HTTP_201_CREATED)
+        except:
+            print("err")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['GET',],detail=False)
     def get_all_applicants(self, request, *args, **kwargs):
