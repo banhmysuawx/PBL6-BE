@@ -12,9 +12,8 @@ from accounts.serializers import UserSerializer
 from job.models.job import Job
 from django.db.models import Q
 from pbl6packageg2 import emailhelper
-
-
-import datetime
+from django.utils import timezone
+from datetime import datetime
 
 class ApplicantView(generics.ListCreateAPIView):
     queryset = Applicant.objects.all()
@@ -123,6 +122,20 @@ class ApplicantCompanyView(viewsets.ViewSet):
                 data = ApplicantUserSerializer(data,many=True).data
                 return Response(data=data,status=status.HTTP_200_OK)
             return Response(data=None,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['GET',],detail=False)
+    def outdated_do_test(self, request, *args, **kwargs):
+        id_company = self.request.query_params.get("company_id",None)
+        now = datetime.now(tz=timezone.utc)
+        if id_company != None:
+            applicants = Applicant.objects.filter(applicanttest__date_expired_at__lte=now, job__company__id=id_company, status="test")
+            for applicant in applicants:
+                applicant.status = "incomplete"
+                applicant.save()
+            data = Applicant.objects.all()
+            data = ApplicantSerializer(data,many=True).data
+            return Response(data=data ,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     # @action(methods=['GET'], detail=False)
