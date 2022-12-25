@@ -16,7 +16,8 @@ class JobService():
             comments = CommentPost.objects.filter(job_id=job.id)
             item = {
                 "job" : job,
-                "comments" : comments
+                "comments" : comments,
+                "image" : job.company.image
             }
             data.append(item)
         return data
@@ -28,7 +29,8 @@ class JobService():
             comments = CommentPost.objects.filter(job_id=job.id)
             data = {
                 "job" : job,
-                "comments" : comments
+                "comments" : comments,
+                "image" : job.company.image
             }
             return data
         except:
@@ -63,8 +65,16 @@ class JobService():
         text_find_strip = text_find.strip()
         jobs = Job.objects.filter(locations__id__in=locations_id,skills__id__in=skills_id).filter(Q(name__icontains=text_find_strip) | Q(description__icontains=text_find_strip)
         | Q(company__company_name__icontains=text_find_strip) | Q(skills__level_name__icontains=text_find_strip)).distinct()
-        print(jobs)
-        return jobs
+        data = []
+        for job in jobs:
+            comments = CommentPost.objects.filter(job_id=job.id)
+            item = {
+                "job" : job,
+                "comments" : comments,
+                "image" : job.company.image
+            }
+            data.append(item)
+        return data
 
         
 
