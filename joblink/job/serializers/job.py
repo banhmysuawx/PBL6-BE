@@ -38,6 +38,7 @@ class JobDetailSerializer(serializers.ModelSerializer):
 class JobUserSerializer(serializers.Serializer):
     job = JobDetailSerializer()
     comments = CommentPostSerializer(many=True)
+    image = serializers.ImageField(use_url=True)
 
 class JobUserStatusSerializer(serializers.Serializer):
     job = JobDetailSerializer()
