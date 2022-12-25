@@ -33,7 +33,7 @@ class SumJobView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     def get(self, request , format =None):
         sum_job = Job.objects.all().count()
-        return Response({'count': sum_job})
+        return Response({'sum_job': sum_job})
 
 class JobInCompanyView(viewsets.ViewSet):
     

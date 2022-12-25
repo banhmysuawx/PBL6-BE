@@ -9,6 +9,7 @@ from companies.models import Company
 from job.models import Job
 from job.models import JobCategory
 from collections import defaultdict
+from accounts.models import User
 # Create your views here.
 class TopCompany(APIView):
 
@@ -80,3 +81,13 @@ class TopJobHighSalary(APIView):
             "chartData":chartData
         }
         return Response(data, status=status.HTTP_200_OK)
+
+# class SeekerAndEmployerByMonth(APIView):
+#     def get(self, request, format =None):
+#         labels = [] 
+#         chartLabels = "Listing Performance"
+#         seekerByMonth = []
+#         employerByMonth = []
+#         for user in User.objects.filter():
+            
+#         return Response("Ok")

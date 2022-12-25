@@ -10,6 +10,8 @@ class Company(models.Model):
     image = models.ImageField(blank = True , default='')
     company_name = models.CharField(max_length= 256, blank=True , default='')
     company_location = models.CharField(max_length = 256 , blank=True , default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.company_name
     
