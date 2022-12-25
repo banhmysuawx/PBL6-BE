@@ -16,6 +16,7 @@ from django.db.models.functions import TruncMonth
 from django.http import JsonResponse
 import json
 from django.http import HttpResponse
+from reviews.models import Review
 # Create your views here.
 class TopCompany(APIView):
 
@@ -161,5 +162,41 @@ class SeekerAndEmployerByMonth(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 class RatingCompany(APIView):
-    def get(self, request, format = None):
-        return Response("Ok")
+    def get(self, request, *args, **kwargs):
+        company_id = self.kwargs.get('id_company')
+        company_object = Company.objects.filter(id = company_id)
+        reviews_in_company = list(company_object)
+        rating_one = 0
+        rating_two = 0
+        rating_three = 0
+        rating_four = 0
+        rating_five = 0
+        rating_in_company = []
+        list_review_of_company = list(Company.objects.filter(id = company_id).values_list('reviews', flat = True))
+        for index in range(len(list_review_of_company)):
+            for item in Review.objects.all():
+                if item.id == list_review_of_company[index]:
+                    rating = item.rating
+                    rating_in_company.append(rating)
+        for item in rating_in_company:
+            if item == 1 :
+                rating_one = rating_one + 1
+            elif item == 2 :
+                rating_two = rating_two + 1
+            elif item == 3 :
+                rating_three = rating_three + 1
+            elif item == 4 :
+                rating_four = rating_four + 1
+            elif item == 5 :
+                rating_five = rating_five + 1
+        data = {
+            'rating_one': rating_one,
+            'rating_two': rating_two,
+            'rating_three': rating_three,
+            'rating_four': rating_four,
+            'rating_five': rating_five           
+        }
+        print("Review of company",rating_in_company)
+        print("Review",list_review_of_company)
+        print("Company" , reviews_in_company)
+        return Response(data,status=status.HTTP_200_OK)
