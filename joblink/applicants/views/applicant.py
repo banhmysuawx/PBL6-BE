@@ -46,7 +46,7 @@ class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
         status = request.data.get('status',None)
         instance = self.get_object()
         if status == 'test':
-            request_data['status_do_test_date'] = datetime.datetime.now()
+            request_data['status_do_test_date'] = datetime.now()
             serializer = self.get_serializer(instance, data=request_data, partial=True)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
@@ -138,14 +138,24 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=data ,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    # @action(methods=['GET'], detail=False)
-    # def filter_applicants(self, request, *args, **kwargs):
-    #     text = self.request.query_params.get("text",'')
-    #     sort_by = self.request.query_params.get("sort_by","apply_date")
-    #     status = self.request.query_params.get("status",None)
-    #     try:
-    #         applicant = Applicant.objects.filter(status=status, candidate__)
-
+    @action(methods=['GET'], detail=False)
+    def filter_applicants(self, request, *args, **kwargs):
+        text = self.request.query_params.get("text",'')
+        sort_by = self.request.query_params.get("sort_by","apply_date")
+        status = self.request.query_params.get("status","all")
+        id_company = self.request.query_params.get("company_id",None)
+        id_job = self.request.query_params.get("job_id",0)
+        if status!='all':
+            applicants = Applicant.objects.filter(status=status,job__company__id=id_company).filter(Q(candidate__seekerprofile__first_name__icontains=text) | Q(candidate__seekerprofile__last_name__icontains=text)).order_by('-'+sort_by)
+            print("hi")
+        else:
+            applicants = Applicant.objects.filter(job__company__id=id_company).filter(Q(candidate__seekerprofile__first_name__icontains=text) | Q(candidate__seekerprofile__last_name__icontains=text)).order_by('-'+sort_by)
+        if id_job!='0':
+            applicants = applicants.filter(job__id=id_job).order_by('-'+sort_by)
+            print(id_job)
+        data = ApplicantSerializer(applicants,many=True).data
+        return Response(data=data)
+        
 
 class ApplicantCandidateView(viewsets.ViewSet):
 
