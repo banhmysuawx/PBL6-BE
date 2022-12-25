@@ -28,7 +28,7 @@ urlpatterns = [
     path("change-password", ChangePasswordView.as_view(), name="change-password"),
     path("me", GetMe.as_view(), name="me"),
     path("admin/list-accounts",GetAllAccounts.as_view()),
-    path("admin/delete-accounts",DeleteUpdateAccount.as_view()),
+    path("admin/delete-accounts/<int:pk>",DeleteUpdateAccount.as_view()),
     path("admin/sum-accounts",SumAccount.as_view()),
     path("admin/sum-seeker",SumSeeker.as_view()),
     path("admin/sum-employer",SumEmployer.as_view())
