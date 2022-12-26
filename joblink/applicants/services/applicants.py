@@ -12,7 +12,7 @@ class ApplicantService():
     @classmethod
     def get_all_applicant_by_company(self,id_company):
         job_ids = Job.objects.filter(company_id=id_company).only('id')
-        applicants = Applicant.objects.filter(job_id__in=job_ids)
+        applicants = Applicant.objects.filter(job_id__in=job_ids).order_by('-apply_date')
         return applicants
 
     @classmethod

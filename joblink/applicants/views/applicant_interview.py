@@ -161,6 +161,7 @@ class ApplicantInterviewCandidateView(viewsets.ViewSet):
             applicant = Applicant.objects.get(pk=id)
             applicant.status = 'schedule_interview'
             applicant.interview_date_official = start_interview
+            applicant.is_send_email = False
             applicant.save()
             data = ApplicantInterviewSerializer(applicant_interview).data
             return Response(data=data, status=status.HTTP_200_OK)

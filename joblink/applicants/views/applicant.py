@@ -11,8 +11,9 @@ from applicants.models.applicant_interview import ApplicantInterview
 from accounts.serializers import UserSerializer
 from job.models.job import Job
 from django.db.models import Q
-
-import datetime
+from pbl6packageg2 import emailhelper
+from django.utils import timezone
+from datetime import datetime
 
 class ApplicantView(generics.ListCreateAPIView):
     queryset = Applicant.objects.all()
@@ -45,7 +46,7 @@ class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
         status = request.data.get('status',None)
         instance = self.get_object()
         if status == 'test':
-            request_data['status_do_test_date'] = datetime.datetime.now()
+            request_data['status_do_test_date'] = datetime.now()
             serializer = self.get_serializer(instance, data=request_data, partial=True)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
@@ -69,6 +70,42 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['PATCH',],detail=True)
+    def send_email_schedule(self,request,*args, **kwargs):
+        try:
+            id = kwargs['pk']
+            link = self.request.data.get("link",None)
+            print("link")
+            print(link)
+            applicant = Applicant.objects.get(pk=id)
+            email = applicant.candidate.email
+            username = applicant.candidate.username
+            time = applicant.interview_date_official.strftime("%m/%d/%Y, %H:%M:%S")
+            company_name= applicant.job.company.company_name
+            name_job = applicant.job.name
+            print(name_job)
+            if id!=None:
+                email_body = (
+                "Dear "+ username + "\n"
+                + " Thank you for your interest in " + company_name + " and for submitting an application for " + name_job
+                + ". As part of our selection process, we would like to invite you to interview: \n" 
+                + " Time: " + time + "\n"
+                + " Venue: " + link
+                )
+                data = {
+                    "email_body": email_body,
+                    "to_email": email,
+                    "email_subject": "["+ company_name +"]" +" Invitation for " +  name_job 
+                }
+                emailhelper.send(data)
+                applicant.is_send_email = True
+                applicant.link_gg_meet =link
+                applicant.save()
+            return Response(dict(msg="Send Email Successful",status=status.HTTP_201_CREATED))
+        except:
+            print("err")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
     @action(methods=['GET',],detail=False)
     def get_all_applicants(self, request, *args, **kwargs):
         id_company = self.request.query_params.get("company_id",None)
@@ -91,14 +128,42 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    # @action(methods=['GET'], detail=False)
-    # def filter_applicants(self, request, *args, **kwargs):
-    #     text = self.request.query_params.get("text",'')
-    #     sort_by = self.request.query_params.get("sort_by","apply_date")
-    #     status = self.request.query_params.get("status",None)
-    #     try:
-    #         applicant = Applicant.objects.filter(status=status, candidate__)
+    @action(methods=['GET',],detail=False)
+    def outdated_do_test(self, request, *args, **kwargs):
+        id_company = self.request.query_params.get("company_id",None)
+        now = datetime.now(tz=timezone.utc)
+        if id_company != None:
+            applicants = Applicant.objects.filter(applicanttest__date_expired_at__lte=now, job__company__id=id_company, status="test")
+            for applicant in applicants:
+                applicant.status = "incomplete"
+                applicant.save()
+            applicants_data = Applicant.objects.filter(interview_date_official__lte=now, job__company__id=id_company, status="schedule_interview")
+            for applicant in applicants_data:
+                applicant.status = "interview_complete"
+                applicant.save()
+            data = Applicant.objects.all()
+            data = ApplicantSerializer(data,many=True).data
+            return Response(data=data ,status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['GET'], detail=False)
+    def filter_applicants(self, request, *args, **kwargs):
+        text = self.request.query_params.get("text",'')
+        sort_by = self.request.query_params.get("sort_by","apply_date")
+        status = self.request.query_params.get("status","all")
+        id_company = self.request.query_params.get("company_id",None)
+        id_job = self.request.query_params.get("job_id",0)
+        if status!='all':
+            applicants = Applicant.objects.filter(status=status,job__company__id=id_company).filter(Q(candidate__seekerprofile__first_name__icontains=text) | Q(candidate__seekerprofile__last_name__icontains=text)).order_by('-'+sort_by)
+            print("hi")
+        else:
+            applicants = Applicant.objects.filter(job__company__id=id_company).filter(Q(candidate__seekerprofile__first_name__icontains=text) | Q(candidate__seekerprofile__last_name__icontains=text)).order_by('-'+sort_by)
+        if id_job!='0':
+            applicants = applicants.filter(job__id=id_job).order_by('-'+sort_by)
+            print(id_job)
+        data = ApplicantSerializer(applicants,many=True).data
+        return Response(data=data)
+        
 
 class ApplicantCandidateView(viewsets.ViewSet):
 
