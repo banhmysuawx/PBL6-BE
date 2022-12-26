@@ -26,6 +26,8 @@ class Applicant(models.Model):
     interview_date_official = models.DateTimeField(null=True,blank=True)
     cv = models.FileField(null=True,blank=True, upload_to=name_file)
     information_added =models.TextField(blank=True,null=True)
+    is_send_email = models.BooleanField(default=False, null=True,blank=True)
+    link_gg_meet = models.URLField(max_length = 200, null=True, blank=True)
 
     class Meta:
         db_table = "applicants"
