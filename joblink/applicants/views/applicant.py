@@ -61,7 +61,8 @@ class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
         return Response(data=serializer.data)
 
 class ApplicantCompanyView(viewsets.ViewSet):
-
+    permission_classes = [IsAuthenticated]
+    
     @action(methods=['GET',],detail=False)
     def get_applicant(self,request,*args, **kwargs):
         id_job = self.request.query_params.get("id_job",None)
@@ -169,7 +170,8 @@ class ApplicantCompanyView(viewsets.ViewSet):
         
 
 class ApplicantCandidateView(viewsets.ViewSet):
-
+    permission_classes = [IsAuthenticated]
+    
     @action(methods=['GET',],detail=False)
     def get_applicant(self,request,*args, **kwargs):
         id_candidate = self.request.query_params.get("id_candidate",None)

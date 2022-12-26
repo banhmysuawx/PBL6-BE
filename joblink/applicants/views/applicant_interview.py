@@ -116,6 +116,7 @@ class ApplicantInterviewDetailView(generics.RetrieveUpdateDestroyAPIView,generic
         return Response(serializer.data)
 
 class GetApplicantInterviewView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['GET',],detail=False)
     def get_time(self,request,*args, **kwargs):
