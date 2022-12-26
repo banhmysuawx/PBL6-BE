@@ -8,12 +8,14 @@ from applicants.services.period_time import PeriodTimeService
 from applicants.services.aplicant_interview import ApplicantInterviewService
 from applicants.models.applicant_interview import ApplicantInterview
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
 
 class ApplicantInterviewView(generics.ListCreateAPIView):
     queryset = PeriodTimeInterview.objects.all()
     serializer_class = PeriodTimeInterviewSerializer
 
 class PeriodTimeByInterview(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['GET',], detail=False)
     def get_period_by_interview_manual(self, request, *args, **kwargs):
@@ -26,6 +28,7 @@ class PeriodTimeByInterview(viewsets.ViewSet):
             return Response(dict(msg="Period Interview is not existed"))
 
 class PeriodTimeCandidate(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['GET',], detail=False)
     def get_times_interview(self, request, *args, **kwargs):
