@@ -13,12 +13,14 @@ from job.models.job import Job
 from django.db.models import Q
 from pbl6packageg2 import emailhelper
 from django.utils import timezone
+from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 
 class ApplicantView(generics.ListCreateAPIView):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
     parser_classes = [MultiPartParser,]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         id_job = request.data.get('job',None)
@@ -40,6 +42,7 @@ class ApplicantView(generics.ListCreateAPIView):
 class ApplicantDetaiView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
         request_data = request.data
