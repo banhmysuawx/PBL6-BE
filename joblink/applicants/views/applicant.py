@@ -70,10 +70,13 @@ class ApplicantCompanyView(viewsets.ViewSet):
             return Response(data=None,status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['GET',],detail=True)
+    @action(methods=['PATCH',],detail=True)
     def send_email_schedule(self,request,*args, **kwargs):
         try:
             id = kwargs['pk']
+            link = self.request.data.get("link",None)
+            print("link")
+            print(link)
             applicant = Applicant.objects.get(pk=id)
             email = applicant.candidate.email
             username = applicant.candidate.username
@@ -87,17 +90,18 @@ class ApplicantCompanyView(viewsets.ViewSet):
                 + " Thank you for your interest in " + company_name + " and for submitting an application for " + name_job
                 + ". As part of our selection process, we would like to invite you to interview: \n" 
                 + " Time: " + time + "\n"
-                + " Venue: " + "https://meet.google.com/qij-hddv-dxt"
+                + " Venue: " + link
                 )
-                print(email_body)
-
                 data = {
                     "email_body": email_body,
                     "to_email": email,
                     "email_subject": "["+ company_name +"]" +" Invitation for " +  name_job 
                 }
                 emailhelper.send(data)
-            return Response(status=status.HTTP_201_CREATED)
+                applicant.is_send_email = True
+                applicant.link_gg_meet =link
+                applicant.save()
+            return Response(dict(msg="Send Email Successful",status=status.HTTP_201_CREATED))
         except:
             print("err")
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -132,6 +136,10 @@ class ApplicantCompanyView(viewsets.ViewSet):
             applicants = Applicant.objects.filter(applicanttest__date_expired_at__lte=now, job__company__id=id_company, status="test")
             for applicant in applicants:
                 applicant.status = "incomplete"
+                applicant.save()
+            applicants_data = Applicant.objects.filter(interview_date_official__lte=now, job__company__id=id_company, status="schedule_interview")
+            for applicant in applicants_data:
+                applicant.status = "interview_complete"
                 applicant.save()
             data = Applicant.objects.all()
             data = ApplicantSerializer(data,many=True).data
