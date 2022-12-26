@@ -8,8 +8,10 @@ from datetime import datetime
 from applicants.services.aplicant_interview import ApplicantInterviewService
 from applicants.serializers.applicant_interview import ListPeriodTimeSerializer,ApplicantInterviewEventSerializer
 from applicants.models.applicant import Applicant
+from applicants.serializers.applicant import ApplicantSerializer
 from applicants.models.period_time_interview import PeriodTimeInterview
-
+from django.utils import timezone
+import pytz
 
 class ApplicantInterviewView(generics.ListCreateAPIView):
     queryset = ApplicantInterview.objects.all()
@@ -138,6 +140,21 @@ class GetApplicantInterviewView(viewsets.ViewSet):
             data = ApplicantInterviewService.get_event(id_company)
             data = ApplicantInterviewEventSerializer(data,many=True).data
             return Response(data=data,status=status.HTTP_200_OK)
+        except:
+            return Response(dict(msg="Event is not existed"))
+
+    @action(methods=['GET'],detail=False)
+    def get_event_by_time(self,request,*args, **kwargs):
+        id_company = self.request.query_params.get("id_company",None)
+        time = self.request.query_params.get("time",None)
+        time_format = datetime.strptime(time, "%Y-%m-%d %H:%M")
+        month = time_format.month+1
+        try:
+            data = ApplicantInterview.objects.filter(applicant__job__company__id=id_company,start_interview__year=time_format.year,start_interview__month=month
+            ,start_interview__day=time_format.day, start_interview__hour=time_format.hour, start_interview__minute=time_format.minute )[0]
+            data = Applicant.objects.get(pk=data.applicant.id)
+            value = ApplicantSerializer(data).data
+            return Response(data=value,status=status.HTTP_200_OK)
         except:
             return Response(dict(msg="Event is not existed"))
 

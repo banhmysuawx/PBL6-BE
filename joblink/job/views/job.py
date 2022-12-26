@@ -76,7 +76,8 @@ class JobInUserView(viewsets.ViewSet):
         location = self.request.query_params.get('location','')
         text = self.request.query_params.get('text','')
         skill = self.request.query_params.get('skill','')
-        jobs = JobService.filter_job_by_location_and_text(location,text,skill)
+        company = self.request.query_params.get("company",'')
+        jobs = JobService.filter_job_by_location_and_text(location,text,skill,company)
         data = JobUserSerializer(jobs,many=True,context={'request': request}).data
         return Response(data=data, status= status.HTTP_200_OK)
 
