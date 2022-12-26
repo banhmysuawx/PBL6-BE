@@ -10,12 +10,14 @@ from applicants.serializers.applicant_interview import ListPeriodTimeSerializer,
 from applicants.models.applicant import Applicant
 from applicants.serializers.applicant import ApplicantSerializer
 from applicants.models.period_time_interview import PeriodTimeInterview
+from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 import pytz
 
 class ApplicantInterviewView(generics.ListCreateAPIView):
     queryset = ApplicantInterview.objects.all()
     serializer_class = ApplicantInterviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         request_data = request.data
@@ -62,6 +64,7 @@ class ApplicantInterviewView(generics.ListCreateAPIView):
 class ApplicantInterviewDetailView(generics.RetrieveUpdateDestroyAPIView,generics.CreateAPIView):
     queryset = ApplicantInterview.objects.all()
     serializer_class = ApplicantInterviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
