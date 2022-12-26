@@ -26,6 +26,6 @@ urlpatterns = [
     path('jobs/<int:pk>', JobDetailView.as_view()),
     path('admin/jobs-list', JobListAdminView.as_view()),
     path('admin/jobs-detail', JobDetailAdminView.as_view()),
-    path('admin/jobs/sum_jobs', SumJobView.as_view()),
+    path('jobs/sum_jobs', SumJobView.as_view()),
     path('',include(router.urls)),
 ]
