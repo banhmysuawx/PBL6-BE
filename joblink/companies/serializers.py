@@ -12,3 +12,8 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = ('id','profile_description','established_date','image','company_name','company_location','average_rating','reviews')
         # fields = "__all__"
+
+class CompanyProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('id','profile_description','established_date','image','company_name','company_location')
