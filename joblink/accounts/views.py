@@ -251,6 +251,7 @@ class GetMe(generics.RetrieveAPIView):
         return self.request.user
 
 class ObjectSchema(Schema):
+    id = fields.Str()
     username = fields.Str()
     email = fields.Str()
     role = fields.Str()
