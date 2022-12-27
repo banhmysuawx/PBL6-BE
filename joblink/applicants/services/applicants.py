@@ -6,7 +6,10 @@ class ApplicantService():
 
     @classmethod
     def get_applicant_by_job(self,id_job):
-        applicants = Applicant.objects.filter(job_id=id_job)
+        if id_job == '0':
+            applicants = Applicant.objects.all()
+        else:
+            applicants = Applicant.objects.filter(job_id=id_job)
         return applicants
 
     @classmethod
