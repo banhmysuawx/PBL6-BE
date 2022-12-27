@@ -157,4 +157,4 @@ class LogoutSerializer(serializers.Serializer):
 class ListUsersSerializer(serializers.Serializer):
     class Meta:
         model = User
-        fields = ('username','email','role','gender','is_active','created_at','updated_at')
+        fields = ('id','username','email','role','gender','is_active','created_at','updated_at')
